@@ -1,14 +1,33 @@
-import { useState } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import Navbar from './components/Navbar';
+import Ships from './components/Ships';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [ships, setShips] = useState(null);
+
+  useEffect(() => {
+    async function getAllStarShips() {
+      try {
+        let res = await axios.get('https://swapi.dev/api/starships/?format=json');
+        setShips(res.data.results);
+      } catch (error) {
+        console.error("Error fetching starships data", error);
+      }
+    }
+
+    getAllStarShips();
+  }, []);
+
+  console.log('data', ships);
 
   return (
     <>
-      <h1>Star Wars</h1>
+      <Navbar />
+      <Ships data={ships} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
